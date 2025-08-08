@@ -1,0 +1,106 @@
+.App {
+  text-align: center;
+  position: relative; /* Thay đổi từ absolute sang relative */
+}
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  height: 100vh;
+}
+
+.leaflet-container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.cluster-icon {
+  background-color: #333;
+  height: 2em;
+  width: 2em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  box-shadow: 0 0 0px 5px #fff;
+}
+
+
+.cluster-icon:hover {
+  background-color: #0000FF; 
+}
+
+
+.toggle-btn {
+  position: absolute; 
+  top: 1.5%;
+  left: 4%;
+  z-index: 1000; 
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* CSS cho Popup */
+.leaflet-popup-content-wrapper {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: auto; /* Đặt width là auto để cho phép nó mở rộng theo nội dung */
+  min-width: 250px; /* Giữ nguyên chiều rộng tối thiểu */
+  max-width: 100%; /* Đặt chiều rộng tối đa là 100% để tránh vượt quá màn hình */
+}
+
+.leaflet-popup-content {
+  text-align: left;
+  white-space: nowrap; /* Đảm bảo nội dung không xuống dòng */
+  overflow: hidden; /* Ẩn nội dung vượt quá chiều rộng của popup */
+  text-overflow: ellipsis; /* Thêm dấu ba chấm nếu nội dung bị cắt */
+}
+
+.leaflet-popup-content img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.popup_1{
+  display: flex;
+  text-align: center;
+}
+
+.popup_2{
+  padding-left: 20px;
+}
+
+.leaflet-popup-content h2 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+
+
+/*Ẩn bảng chỉ đường*/
+.leaflet-routing-container {
+  display: none !important;
+}
+
+.ant-drawer-title{
+  display: flex;
+  justify-content: center;
+}

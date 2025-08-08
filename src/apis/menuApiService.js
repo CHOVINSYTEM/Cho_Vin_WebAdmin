@@ -1,0 +1,121 @@
+import axios from "axios";
+import {
+  BASE_URL,
+  MENU,
+  PRODUCT,
+  BASE_URL_CORAL_TEAM_VERSION,
+} from "./constants";
+
+const token = localStorage.getItem("vhgp-token");
+
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menus/byMode?modeId=1
+export const getListMenuByMode = (modeId) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}${MENU}/byMode?modeId=${modeId}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/product-management/products/1/products?pageIndex=1&pageSize=20
+export const getListMenuByMenuId = (menuId, page, size) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}product-management/products/${menuId}/${PRODUCT}?pageIndex=${page}&pageSize=${size}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menu-management/menus/menuId?menuId
+export const getMenuDetail = async (menuId) => {
+  https: return await axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}menu-management/menus/menuId?menuId=${menuId}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menus/1/filter?storeId=s4&page=1&pageSize=20
+export const getListProductMenu = (menuId, storeId, page, size) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}${MENU}/${menuId}/filter?storeId=${storeId}&page=${page}&pageSize=${size}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menus/1/products/byCategoryId?categoryId=11&page=1&pageSize=20
+export const getListProductMenuByCate = (menuId, categoryId, page, size) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}${MENU}/${menuId}/products/byCategoryId?categoryId=${categoryId}&page=${page}&pageSize=${size}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menu-management/menus
+export const postMenu = (menu) => {
+  return axios.post(
+    `${BASE_URL_CORAL_TEAM_VERSION}menu-management/${MENU}`,
+    menu,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menu-management/menus/s
+export const putMenu = (menu, menuId) => {
+  https: return axios.patch(
+    `${BASE_URL_CORAL_TEAM_VERSION}menu-management/${MENU}/${menuId}`,
+    menu,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/menu-management/menus/{menuId}/remove-product
+export const removeProductFromMenu = (menuId, listProductId) => {
+  https: return axios.post(
+    `${BASE_URL_CORAL_TEAM_VERSION}menu-management/${MENU}/${menuId}/remove-product`,
+    listProductId,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
