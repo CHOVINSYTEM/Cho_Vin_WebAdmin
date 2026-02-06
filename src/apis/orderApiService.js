@@ -189,7 +189,7 @@ export const updateOrder = (orderId, updatedOrder) => {
 export const getOrderWaiting = async () => {
   const token = localStorage.getItem("vhgp-token");
   return await axios.get(
-    "https://api.cho.vin/api/v1/routes/get-delivery-point",
+    `${BASE_URL_CORAL_TEAM_VERSION}routes/get-delivery-point`,
     {
       headers: {
         Accept: "application/json",
@@ -204,7 +204,7 @@ export const getOrderWaiting = async () => {
 export const getOrderByShipperId = async (shipper) => {
   const token = localStorage.getItem("vhgp-token");
   return await axios.get(
-    `https://api.vhgp.net/api/v1/orders/shippers/${shipper.id}`,
+    `${BASE_URL_CORAL_TEAM_VERSION}orders/shippers/${shipper.id}`,
     {
       headers: {
         Accept: "application/json",

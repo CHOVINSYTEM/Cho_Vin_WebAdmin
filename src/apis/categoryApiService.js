@@ -132,7 +132,14 @@ export const postStoreCategory = (storeCategory) => {
 export const postBrand = (brand) => {
   return axios.post(
     `${BASE_URL_CORAL_TEAM_VERSION}${"brand-management"}/brands`,
-    brand
+    brand,
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
 };
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v2/brand-management/brands

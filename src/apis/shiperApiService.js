@@ -56,18 +56,18 @@ export const putShipper = (shipper) => {
 };
 //http://vhgp-api.vhgp.net/api/Shipper/GetRedis
 export const getShipperRedis = async () => {
-  return await axios.get(`https://api-vhgp.cho.vin/api/shippers/redis`);
+  return await axios.get(`${BASE_URL_CORAL_TEAM_VERSION}/api/shippers/redis`);
 };
 
 
 //https://vhgp-api.vhgp.net/api/Shipper
 export const getAllShipper = async () => {
-  return await axios.get(`https://api-vhgp.cho.vin/api/shippers`);
+  return await axios.get(`${BASE_URL_CORAL_TEAM_VERSION}/api/shippers`);
 };
 
 //https://vhgp-api.vhgp.net/api/Shipper/GetTimeShipperOff/{shipperId}
 export const getTimeShipperOffline = async (shipper) => {
   return await axios.get(
-    `https://vhgp-api.vhgp.net/api/shippers/${shipper.id}/time-off`
+    `${BASE_URL_CORAL_TEAM_VERSION}/api/shippers/${shipper.id}/time-off`
   );
 };

@@ -17,17 +17,12 @@ export const HubModal = ({ handleReload }) => {
         setHubName(hubModal.name);
         getListBuilding(1, 100)
             .then((res) => {
-                const buildings = res.data;
-                setBuildings(
-                    buildings.sort(function (a, b) {
-                        return parseInt(a.id.split("b")[1]) - parseInt(b.id.split("b")[1]);
-                    })
-                );
-                for (let index = 0; index < buildings.length; index++) {
-                    const element = buildings[index];
-                    if (hubModal.buildingId === element.id) {
-                        setBuilding({ label: element.name, value: element.id });
-                    }
+                const list = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
+                const sorted = [...list].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+                setBuildings(sorted);
+                const found = sorted.find((el) => hubModal.buildingId === el.id);
+                if (found) {
+                    setBuilding({ label: found.name, value: found.id });
                 }
             })
             .catch((error) => {

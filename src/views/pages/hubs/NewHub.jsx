@@ -19,13 +19,12 @@ export const NewHub = ({ handleReload }) => {
         setStatus({ label: "Hoạt động", value: 0 });
         getListBuilding(1, 100)
             .then((res) => {
-                const buildings = res.data;
-                setBuildings(
-                    buildings.sort(function (a, b) {
-                        return parseInt(a.id.split("b")[1]) - parseInt(b.id.split("b")[1]);
-                    })
-                );
-                setBuilding({ label: buildings[0].name, value: buildings[0].id });
+                const list = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
+                const sorted = [...list].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+                setBuildings(sorted);
+                if (sorted.length > 0) {
+                    setBuilding({ label: sorted[0].name, value: sorted[0].id });
+                }
             })
             .catch((error) => {
                 notify("Đã xảy ra lỗi gì đó!!", "Error");

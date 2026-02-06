@@ -45,7 +45,7 @@ import {
   getOrderByShipperId,
   getOrderDetail,
 } from "../../../apis/orderApiService";
-import shipperIcon from "./icon/shipper.png";
+import shipperIcon from "./icon/Shipper.png";
 import orderIcon from "./icon/address.png";
 
 export default function BasicMap() {

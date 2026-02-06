@@ -2,16 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Select from "react-select";
 import { Button, Card, CardBody, CardHeader, Col, Container, Input, Modal, Row, Spinner } from "reactstrap";
-import { postBrand, postStoreCategory } from "../../../apis/categoryApiService";
+import { postBrand } from "../../../apis/categoryApiService";
 import { notify } from "../../../components/Toast/ToastCustom";
 import { AppContext } from "../../../context/AppProvider";
 export const NewBrand = ({ handleReload }) => {
     const { openModalNewCateStore, setOpenModalNewCateStore, brandList, setBrandList } = useContext(AppContext);
+    const [brandCode, setBrandCode] = useState("");
     const [brandName, setBrandName] = useState("");
     const [brandNameState, setBrandNameState] = useState("");
-    const [brandid, setBrandid] = useState("");
-    const [brandidState, setBrandidState] = useState("");
-    const [status, setStatus] = useState(0);
+    const [brandImage, setBrandImage] = useState("");
+    const [status, setStatus] = useState({ label: "Hoạt động", value: 0 });
     const [isLoadingCircle, setIsLoadingCircle] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     let history = useHistory();
@@ -20,50 +20,41 @@ export const NewBrand = ({ handleReload }) => {
         setStatus({ label: "Hoạt động", value: 0 });
     }, []);
     const validateCustomStylesForm = () => {
-        let valid = true;
-
-        if (brandid === "") {
-            valid = false;
-            setBrandidState("invalid");
-        } else {
-            // valid = true;
-            setBrandidState("valid");
-        }
-
-        if (brandName === "") {
-            valid = false;
+        if (brandName.trim() === "") {
             setBrandNameState("invalid");
-        } else {
-            // valid = true;
-            setBrandNameState("valid");
+            return false;
         }
-
-        return valid;
+        setBrandNameState("valid");
+        return true;
     };
+
     const hanldeUpdate = () => {
-        if (validateCustomStylesForm()) {
-            setIsLoadingCircle(true);
-            let brand = { name: brandName, image: "", id: brandid };
-            console.log({ brand });
-            postBrand(brand)
-                .then((res) => {
-                    if (res.data) {
-                        setIsLoading(false);
-                        notify("Thêm mới thành công", "Success");
-                        history.push("/admin/brands");
-                        setBrandList([...brandList, brand]);
-                        handleReload();
-                        setOpenModalNewCateStore(false);
-                        setIsLoadingCircle(false);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setIsLoadingCircle(false);
+        if (!validateCustomStylesForm()) return;
+        setIsLoadingCircle(true);
+        const statusStr = status?.value === 1 ? "Inactive" : "Active";
+        const brand = {
+            name: brandName.trim(),
+            image: brandImage.trim() || null,
+            status: statusStr,
+        };
+        postBrand(brand)
+            .then((res) => {
+                if (res.data) {
                     setIsLoading(false);
-                    notify("Đã xảy ra lỗi gì đó!!", "Error");
-                });
-        }
+                    notify("Thêm mới thành công", "Success");
+                    history.push("/admin/brands");
+                    setBrandList([...brandList, res.data]);
+                    handleReload();
+                    setOpenModalNewCateStore(false);
+                }
+                setIsLoadingCircle(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setIsLoadingCircle(false);
+                setIsLoading(false);
+                notify("Đã xảy ra lỗi gì đó!!", "Error");
+            });
     };
     const customStylesPayment = {
         control: (provided, state) => ({
@@ -97,10 +88,11 @@ export const NewBrand = ({ handleReload }) => {
                         isOpen={openModalNewCateStore}
                         toggle={() => {
                             setOpenModalNewCateStore(false);
+                            setBrandCode("");
                             setBrandName("");
-                            setBrandid("");
+                            setBrandImage("");
                             setBrandNameState("");
-                            setBrandidState("");
+                            setStatus({ label: "Hoạt động", value: 0 });
                         }}
                     >
                         <div className="modal-body p-0">
@@ -123,36 +115,52 @@ export const NewBrand = ({ handleReload }) => {
                                                             <div className="row">
                                                                 <div className="col-md-6">
                                                                     <div className="form-group">
-                                                                        <label className="form-control-label">Mã thương hiệu </label>
+                                                                        <label className="form-control-label">Mã thương hiệu</label>
                                                                         <Input
-                                                                            valid={brandidState === "valid"}
-                                                                            invalid={brandidState === "invalid"}
                                                                             className="form-control"
-                                                                            type="search"
-                                                                            id="example-search-input"
-                                                                            value={brandid}
-                                                                            onChange={(e) => {
-                                                                                setBrandid(e.target.value);
-                                                                            }}
-                                                                        />{" "}
-                                                                        <div className="invalid-feedback">Mã thương hiệu không được để trống</div>
+                                                                            type="text"
+                                                                            placeholder="Tùy chọn"
+                                                                            value={brandCode}
+                                                                            onChange={(e) => setBrandCode(e.target.value)}
+                                                                        />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="form-group">
-                                                                        <label className="form-control-label">Tên thương hiệu </label>
+                                                                        <label className="form-control-label">Tên thương hiệu</label>
                                                                         <Input
                                                                             valid={brandNameState === "valid"}
                                                                             invalid={brandNameState === "invalid"}
                                                                             className="form-control"
-                                                                            type="search"
-                                                                            id="example-search-input"
-                                                                            value={`${brandName}`}
-                                                                            onChange={(e) => {
-                                                                                setBrandName(e.target.value);
-                                                                            }}
+                                                                            type="text"
+                                                                            value={brandName}
+                                                                            onChange={(e) => setBrandName(e.target.value)}
                                                                         />
                                                                         <div className="invalid-feedback">Tên thương hiệu không được để trống</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group">
+                                                                        <label className="form-control-label">Ảnh (không bắt buộc)</label>
+                                                                        <Input
+                                                                            className="form-control"
+                                                                            type="text"
+                                                                            placeholder="URL ảnh"
+                                                                            value={brandImage}
+                                                                            onChange={(e) => setBrandImage(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group">
+                                                                        <label className="form-control-label">Trạng thái</label>
+                                                                        <Select
+                                                                            value={status}
+                                                                            onChange={setStatus}
+                                                                            options={optionsStatus}
+                                                                            styles={customStylesPayment}
+                                                                            placeholder="Chọn trạng thái"
+                                                                        />
                                                                     </div>
                                                                 </div>
                                                             </div>
