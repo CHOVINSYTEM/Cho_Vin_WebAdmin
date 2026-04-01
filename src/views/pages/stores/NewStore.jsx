@@ -412,24 +412,24 @@ export const NewStore = () => {
                     <div className="col-md-6">
                       <div className="form-group">
                         <label className="form-control-label">
-                          Mã cửa hàng {" "}
+                          Mã cửa hàng{" "}
                         </label>
-                        <Input 
-                        valid={storeCodeState === "valid"} 
-                        invalid={storeCodeState === "invalid"}
-                        className="form-control"
+                        <Input
+                          valid={storeCodeState === "valid"}
+                          invalid={storeCodeState === "invalid"}
+                          className="form-control"
                           type="search"
                           id="example-search-input"
-                        value={`${storeCode}`}
-                        onChange={(e) => {
-                          setStoreCode(e.target.value);
-                        }}
+                          value={`${storeCode}`}
+                          onChange={(e) => {
+                            setStoreCode(e.target.value);
+                          }}
                         />
                         <div className="invalid-feedback">
                           Mã cửa hàng không được để trống
-                        </div>                    
+                        </div>
                       </div>
-                    </div>      
+                    </div>
 
                     <div className="col-md-6">
                       <div className="form-group">

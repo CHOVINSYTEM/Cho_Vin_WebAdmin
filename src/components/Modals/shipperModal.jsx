@@ -20,13 +20,14 @@ import { AppContext } from "../../context/AppProvider";
 import { notify } from "../Toast/ToastCustom";
 import WithdrawModal from "./WithdrawModal";
 import RechargeModal from "./RechargeModal";
-import TransactionHistoryModal from './TransactionHistoryModal';
+import TransactionHistoryModal from "./TransactionHistoryModal";
 export const ShipperModal = ({ handleReload }) => {
   const { openModal, setOpenModal, shipperModal, setShipperModal } =
     useContext(AppContext);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [isRechargeModalOpen, setRechargeModalOpen] = useState(false);
-  const [transactionHistoryModalOpen, setTransactionHistoryModalOpen] = useState(false);
+  const [transactionHistoryModalOpen, setTransactionHistoryModalOpen] =
+    useState(false);
 
   // Function to open WithdrawModal
   const openWithdrawModal = () => {
@@ -172,7 +173,7 @@ export const ShipperModal = ({ handleReload }) => {
     });
     setVehicleColor(shipperModal.colour);
     setStatus(
-      shipperModal.status === "Active" ? optionsStatus[0] : optionsStatus[1]
+      shipperModal.status === "Active" ? optionsStatus[0] : optionsStatus[1],
     );
     if (shipperModal.image !== null && shipperModal.image !== "") {
       setImages([{ data_url: shipperModal.image }]);
@@ -555,7 +556,10 @@ export const ShipperModal = ({ handleReload }) => {
                               >
                                 Lịch sử giao dịch
                               </Button>
-                              <TransactionHistoryModal isOpen={transactionHistoryModalOpen} toggle={toggleTransactionHistoryModal} />
+                              <TransactionHistoryModal
+                                isOpen={transactionHistoryModalOpen}
+                                toggle={toggleTransactionHistoryModal}
+                              />
                               {isLoadingCircle ? (
                                 <Button
                                   className="btn-neutral btn-icon"
