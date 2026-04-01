@@ -10,6 +10,7 @@ import 'react-datetime/css/react-datetime.css'
 import { BrowserRouter } from 'react-router-dom'
 import AppProvider from './context/AppProvider'
 import { ToastContainer } from 'react-toastify'
+import './firebase-config'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

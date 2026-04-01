@@ -9,45 +9,54 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export const Login = () => {
   const { setUser } = useContext(AppContext);
-  const inputs = document.querySelectorAll(".input");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory();
   useEffect(() => {
+    const inputs = document.querySelectorAll(".input");
+
+    function addcl() {
+      let parent = this.parentNode.parentNode;
+      parent.classList.add("focus");
+    }
+
+    function remcl() {
+      let parent = this.parentNode.parentNode;
+      if (this.value == "") {
+        parent.classList.remove("focus");
+      }
+    }
+
+    inputs.forEach((input) => {
+      input.addEventListener("focus", addcl);
+      input.addEventListener("blur", remcl);
+    });
+
     if (localStorage.getItem("user")) {
       history.push("/");
     }
 
-    return () => {};
+    return () => {
+      inputs.forEach((input) => {
+        input.removeEventListener("focus", addcl);
+        input.removeEventListener("blur", remcl);
+      });
+    };
   }, [history]);
 
-  function addcl() {
-    let parent = this.parentNode.parentNode;
-    parent.classList.add("focus");
-  }
-
-  function remcl() {
-    let parent = this.parentNode.parentNode;
-    if (this.value == "") {
-      parent.classList.remove("focus");
-    }
-  }
-
-  inputs.forEach((input) => {
-    input.addEventListener("focus", addcl);
-    input.addEventListener("blur", remcl);
-  });
-
   const hanldeLogin = () => {
+    if (!email || !password) {
+      notify("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu", "Error");
+      return;
+    }
+
     setIsLoading(true);
-    // console.log(email, password);
     const authentication = getAuth();
 
     signInWithEmailAndPassword(authentication, email, password)
       .then((response) => {
-        console.log(response);
-        console.log("Response:", response);
+        console.log("Login Success:", response);
         if (response) {
           setIsLoading(false);
           notify("Đăng Nhập Thành Công", "Success");
@@ -63,15 +72,24 @@ export const Login = () => {
             localStorage.setItem("vhgp-token", token);
             console.log("Token after login:", token);
           })
-        } else {
-          notify("Sai tài khoản hoặc mật khẩu", "Error");
-          setIsLoading(false);
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Login Error:", error.code, error.message);
         setIsLoading(false);
-        notify("Sai tài khoản hoặc mật khẩu", "Error");
+        
+        let message = "Sai tài khoản hoặc mật khẩu";
+        if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+          message = "Sai tài khoản hoặc mật khẩu";
+        } else if (error.code === "auth/operation-not-allowed") {
+           message = "Phương thức đăng nhập này chưa được bật (Email/Password)";
+        } else if (error.code === "auth/too-many-requests") {
+           message = "Đã thử quá nhiều lần, vui lòng đợi một lúc";
+        } else if (error.code === "auth/network-request-failed") {
+          message = "Lỗi kết nối mạng";
+        }
+        
+        notify(message, "Error");
       });
   };
   return (
