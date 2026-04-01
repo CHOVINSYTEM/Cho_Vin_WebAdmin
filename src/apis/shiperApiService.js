@@ -1,17 +1,21 @@
 import axios from "axios";
 import { SHIP, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
-const token = localStorage.getItem("vhgp-token");
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem("vhgp-token");
+  return {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v1/shipper-management/shippers?pageIndex=1&pageSize=20
 export const getListShipper = (page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${SHIP}/shippers?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -20,11 +24,7 @@ export const getListShipperbyKey = (key, page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${SHIP}/shippers/search-name?shipName=${key}&pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -32,11 +32,7 @@ export const getListShipperbyKey = (key, page, size) => {
 export const postShipper = (shipper) => {
   return axios.post(`${BASE_URL_CORAL_TEAM_VERSION}${SHIP}/shippers`, shipper, 
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -46,11 +42,7 @@ export const putShipper = (shipper) => {
     `${BASE_URL_CORAL_TEAM_VERSION}${SHIP}/shippers/${shipper.id}`,
     shipper,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };

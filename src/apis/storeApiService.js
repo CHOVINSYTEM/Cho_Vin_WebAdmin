@@ -4,7 +4,14 @@ import {
   BASE_URL_CORAL_TEAM_VERSION,
 } from "./constants";
 
-const token = localStorage.getItem("vhgp-token"); 
+const getAuthHeader = () => {
+  const token = localStorage.getItem("vhgp-token");
+  return {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v1/store-management/stores?pageIndex=1&pageSize=20&SearchByStoreName=n&SearchByBuilding=S1.03&SearchByStoreCategory=N%C3%B4ng%20s%E1%BA%A3&SearchByBrand=kh%C3%B4
 export const getListStores = (
@@ -31,27 +38,17 @@ export const getListStores = (
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${STORE}/${"stores"}?pageIndex=${page}&pageSize=${size}${url}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     }
   );
 };
 
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v2/brands?pageIndex=1&pageSize=10
 export const getListBrands = (page, size) => {
-  // const token = localStorage.getItem("vhgp-token"); 
-  console.log("Get list brands", token);
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${"brands"}?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -61,11 +58,7 @@ export const getListStoreCategory = (page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${"storeCategory-management"}/storeCategories?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -75,11 +68,7 @@ export const getStoreDetail = (storeId) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${STORE}/stores/${"storeId"}?storeId=${storeId}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -89,11 +78,7 @@ export const getListBuilding = (page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${"buildings"}?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -102,11 +87,7 @@ export const getListArea = (page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${"areas"}?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -115,11 +96,7 @@ export const getListBuildingByAreaId = (id) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}areas/ByAreaId?areaId=${id}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -128,26 +105,17 @@ export const getListStoreByKey = (key, page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${"store-management"}/stores/search-name?storeName=${key}&pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v1/store-management/stores/1
 export const putStore = (store, id, imgUpdate) => {
   return axios.patch(
-    `${BASE_URL_CORAL_TEAM_VERSION}${STORE}/stores/${id}?imgUpdate=${imgUpdate}
-    `,
+    `${BASE_URL_CORAL_TEAM_VERSION}${STORE}/stores/${id}?imgUpdate=${imgUpdate}`,
     store,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -156,11 +124,7 @@ export const putStore = (store, id, imgUpdate) => {
 export const postStore = (store) => {
   return axios.post(`${BASE_URL_CORAL_TEAM_VERSION}${STORE}/stores`, store, 
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -169,11 +133,7 @@ export const postStore = (store) => {
 export const deleteStore = (id) => {
   return axios.delete(`${BASE_URL_CORAL_TEAM_VERSION}${STORE}/stores/${id}`, 
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };

@@ -1,8 +1,15 @@
 import axios from "axios";
 import { ORDER, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
-import { get } from "lodash";
 
-const token = localStorage.getItem("vhgp-token");
+const getAuthHeader = () => {
+  const token = localStorage.getItem("vhgp-token");
+  return {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+};
+
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v1/order-management/orders?pageIndex=1&pageSize=200&DateFilter=Nov%2023%202022&SearchByPayment=0&SearchByStatus=1&SearchByMode=1
 export const getListOrder = (
   dateFilter,
@@ -32,11 +39,7 @@ export const getListOrder = (
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders?pageIndex=${page}&pageSize=${size}${url}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     }
   );
 };
@@ -46,11 +49,7 @@ export const getListAllOrders = (page = 1, size = 100) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders?pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     }
   );
 };
@@ -63,14 +62,10 @@ export const getOrderReport = (startDate, endDate) => {
     url = `?StartDate=${startDate}&EndDate=${endDate}`;
   }
 
-  https: return axios.get(
+  return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders/report${url}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -86,11 +81,7 @@ export const getOrderReportPrice = (startDate, endDate) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders/report-price${url}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -100,11 +91,7 @@ export const getListOrderByStatus = (status, page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders/search-status?status=${status}&pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -113,11 +100,7 @@ export const getListOrderByStatus = (status, page, size) => {
 export const getOrderDetail = (orderId) => {
   return axios.get(`${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders/${orderId}`, 
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -127,11 +110,7 @@ export const getListOrderByPayment = (payment, page, size) => {
   return axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}${ORDER}/orders/search-payment?paymentType=${payment}&pageIndex=${page}&pageSize=${size}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
@@ -139,78 +118,51 @@ export const getListOrderByPayment = (payment, page, size) => {
 export const cancelOrder = (OrderId) => {
   return axios.patch(
     `${BASE_URL_CORAL_TEAM_VERSION}orders/admin/cancel?orderId=${OrderId}&orderStatus=6`,
+    {},
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
 
 //https://api.vhgp.net/api/v1/suppliers/deervinhome%40deer.com/billOfLanding
 export const createOrder = (supplierId, order) => {
-  console.log(supplierId);
-  console.log(order);
-
   return axios.post(
     `${BASE_URL_CORAL_TEAM_VERSION}suppliers/${supplierId}/billOfLanding`,
     order,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
 
 //https://api.vhgp.net/api/v1/orders/admin/{orderId}
 export const updateOrder = (orderId, updatedOrder) => {
-  console.log(orderId);
-  console.log(updatedOrder);
-
   return axios.patch(
     `${BASE_URL_CORAL_TEAM_VERSION}orders/admin/${orderId}`,
     updatedOrder,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     },
   );
 };
 
 //https://api.vhgp.net/api/v1/routes/get-delivery-point
 export const getOrderWaiting = async () => {
-  const token = localStorage.getItem("vhgp-token");
   return await axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}routes/get-delivery-point`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     }
   );
 };
 
 //https://api.vhgp.net/api/v1/orders/shippers/{shipper.id}
 export const getOrderByShipperId = async (shipper) => {
-  const token = localStorage.getItem("vhgp-token");
   return await axios.get(
     `${BASE_URL_CORAL_TEAM_VERSION}orders/shippers/${shipper.id}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeader(),
     }
   );
 };
