@@ -10,7 +10,7 @@
       "destination": "http://161.118.238.100:8080/api/:path*"
     },
     {
-      "source": "/((?!api/proxy).* )",
+      "source": "/((?!api/proxy).*)",
       "destination": "/index.html"
     }
   ]

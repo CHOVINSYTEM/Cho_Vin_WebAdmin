@@ -1,5 +1,4 @@
-export const BASE_URL_CORAL_TEAM_VERSION =
-  "http://161.118.238.100:8080/api/v1/";
+export const BASE_URL_CORAL_TEAM_VERSION = "/api/proxy/v1/";
 
 export const STORE = "store-management";
 export const PRODUCT = "products";
