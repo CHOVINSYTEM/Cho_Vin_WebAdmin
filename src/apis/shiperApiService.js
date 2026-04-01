@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, SHIP, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
+import { SHIP, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
 const token = localStorage.getItem("vhgp-token");
 
 //https://deliveryvhgp-webapi.azurewebsites.net/api/v1/shipper-management/shippers?pageIndex=1&pageSize=20

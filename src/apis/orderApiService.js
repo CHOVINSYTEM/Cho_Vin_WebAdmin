@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, ORDER, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
+import { ORDER, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
 import { get } from "lodash";
 
 const token = localStorage.getItem("vhgp-token");

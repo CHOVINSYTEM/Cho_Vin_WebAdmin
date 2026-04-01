@@ -1,7 +1,5 @@
 import axios from "axios";
 import {
-  BASE_URL,
-  BASE_URL_V2,
   BASE_URL_CORAL_TEAM_VERSION,
 } from "./constants";
 

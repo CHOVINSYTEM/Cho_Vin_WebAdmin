@@ -1,6 +1,5 @@
 import axios from "axios";
 import {
-  BASE_URL,
   CATEGORY,
   PRODUCT,
   BASE_URL_CORAL_TEAM_VERSION,
