@@ -16,6 +16,7 @@ import { notify } from "../../../components/Toast/ToastCustom";
 import { postMenu } from "../../../apis/menuApiService";
 import Select from "react-select";
 import { createOrder } from "../../../apis/orderApiService";
+import { createCustomer } from "../../../apis/customerApiService";
 import axios from "axios";
 
 const CreateOrder = () => {
@@ -366,19 +367,9 @@ const CreateOrder = () => {
       const token = localStorage.getItem("vhgp-token");
       try {
         const userExists = await checkUserExists(customerInfo.phoneNumber);
-        console.log("User does not exist, creating new user...");
         if (!userExists) {
-          await axios.post(
-            "https://api.cho.vin/api/v1/customer-management",
-            customerInfo,
-            {
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
+          console.log("User does not exist, creating new user...");
+          await createCustomer(customerInfo);
         }
 
         let order = {

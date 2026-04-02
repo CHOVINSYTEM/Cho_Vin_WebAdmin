@@ -16,20 +16,24 @@ export const NewHub = ({ handleReload }) => {
     const [isLoadingCircle, setIsLoadingCircle] = useState(false);
     let location = useLocation();
     useEffect(() => {
-        setStatus({ label: "Hoạt động", value: 0 });
-        getListBuilding(1, 100)
-            .then((res) => {
-                const list = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
-                const sorted = [...list].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
-                setBuildings(sorted);
-                if (sorted.length > 0) {
-                    setBuilding({ label: sorted[0].name, value: sorted[0].id });
-                }
-            })
-            .catch((error) => {
-                notify("Đã xảy ra lỗi gì đó!!", "Error");
-            });
-    }, []);
+        if (openNewHubModal) {
+            setStatus({ label: "Hoạt động", value: 0 });
+            setHubName("");
+            setHubNameState("");
+            getListBuilding(1, 100)
+                .then((res) => {
+                    const list = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
+                    const sorted = [...list].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+                    setBuildings(sorted);
+                    if (sorted.length > 0) {
+                        setBuilding({ label: sorted[0].name, value: sorted[0].id });
+                    }
+                })
+                .catch((error) => {
+                    notify("Đã xảy ra lỗi gì đó!!", "Error");
+                });
+        }
+    }, [openNewHubModal]);
 
     const validateCustomStylesForm = () => {
         let valid = true;

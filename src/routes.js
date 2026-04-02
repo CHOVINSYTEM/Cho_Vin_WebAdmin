@@ -16,6 +16,7 @@ z
 */
 import CreateOrder from './views/pages/create-order/CreateOrder.jsx'
 import AreaManage from './views/pages/areas/AreaManage.jsx'
+import BuildingManageView from './views/pages/building/BuildingManage.jsx'
 import BrandManage from './views/pages/brands/BrandManage.jsx'
 import CategoryManage from './views/pages/categories/CategoryManage.jsx'
 import Dashboard from './views/pages/dashboards/Dashboard.jsx'
@@ -123,6 +124,13 @@ const routes = [
     name: 'Khu vực',
     icon: 'fa-solid fa-city',
     component: AreaManage,
+    layout: '/admin',
+  },
+  {
+    path: '/buildings',
+    name: 'Tòa Nhà',
+    icon: 'fa-solid fa-building',
+    component: BuildingManageView,
     layout: '/admin',
   },
   {
