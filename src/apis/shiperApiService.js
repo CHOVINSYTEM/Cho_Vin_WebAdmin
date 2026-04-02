@@ -46,6 +46,15 @@ export const putShipper = (shipper) => {
     },
   );
 };
+//https://deliveryvhgp-webapi.azurewebsites.net/api/v1/shipper-management/shippers/{shipperId}
+export const deleteShipper = (shipperId) => {
+  return axios.delete(
+    `${BASE_URL_CORAL_TEAM_VERSION}${SHIP}/shippers/${shipperId}`,
+    {
+      headers: getAuthHeader(),
+    },
+  );
+};
 //http://vhgp-api.vhgp.net/api/Shipper/GetRedis
 export const getShipperRedis = async () => {
   return await axios.get(`${BASE_URL_CORAL_TEAM_VERSION}api/shippers/redis`);

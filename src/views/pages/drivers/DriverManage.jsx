@@ -37,6 +37,7 @@ import {
 import {
   getListShipper,
   getListShipperbyKey,
+  deleteShipper,
 } from "../../../apis/shiperApiService";
 
 import Lottie from "react-lottie";
@@ -145,7 +146,22 @@ function DriverManage() {
     }),
   };
 
-  const hanldeDeleteStoreCate = () => {};
+  const hanldeDeleteStoreCate = (id, fullName) => {
+    setIsLoadingCircle(true);
+    deleteShipper(id)
+      .then((res) => {
+        setIsLoadingCircle(false);
+        setOpenDeleteModal(false);
+        notify("Xóa tài xế " + fullName + " thành công", "Success");
+        hanldeGetListDriver();
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoadingCircle(false);
+        setOpenDeleteModal(false);
+        notify("Xóa tài xế thất bại!!\n" + error.message, "Error");
+      });
+  };
 
   return (
     <>
