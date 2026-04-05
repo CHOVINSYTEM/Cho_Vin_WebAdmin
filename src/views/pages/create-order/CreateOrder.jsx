@@ -16,7 +16,7 @@ import { notify } from "../../../components/Toast/ToastCustom";
 import { postMenu } from "../../../apis/menuApiService";
 import Select from "react-select";
 import { createOrder } from "../../../apis/orderApiService";
-import { createCustomer } from "../../../apis/customerApiService";
+import { createCustomer, getCustomers } from "../../../apis/customerApiService";
 import axios from "axios";
 
 const CreateOrder = () => {
@@ -73,6 +73,22 @@ const CreateOrder = () => {
   });
 
   const [isLoadingCircle, setIsLoadingCircle] = useState(false);
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const response = await getCustomers(1, 1000);
+      if (response.data) {
+        setCustomers(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
 
   const handleCommandChange = (e) => {
     const value = e.target.value;
@@ -316,17 +332,14 @@ const CreateOrder = () => {
     return valid;
   };
 
-  const fetchCustomerInfo = async (phoneNumber) => {
+  const fetchCustomerInfo = (phoneNumber) => {
     try {
       console.log("Fetching customer info for phone number:...", phoneNumber);
-      const response = await axios.get(
-        `https://api-pointify.reso.vn/api/memberships?apiKey=34519997-3d4b-4b31-857f-d6612082c11b&phoneNumber=${phoneNumber}`
-      );
+      const customer = customers.find((item) => item.phoneNumber === phoneNumber);
 
-      if (response.data.items.length > 0) {
-        const customerName = response.data.items[0].fullname;
-        console.log("Customer found:", customerName);
-        setFormData((prev) => ({ ...prev, name: customerName }));
+      if (customer) {
+        console.log("Customer found:", customer.fullName);
+        setFormData((prev) => ({ ...prev, name: customer.fullName }));
         setFormState((prev) => ({ ...prev, name: "valid" }));
       } else {
         console.log("Customer not found.");
@@ -338,19 +351,11 @@ const CreateOrder = () => {
     }
   };
 
-  const checkUserExists = async (phoneNumber) => {
+  const checkUserExists = (phoneNumber) => {
     console.log("Checking if user exists for phone number:", phoneNumber);
-    try {
-      const response = await axios.get(
-        `https://api-pointify.reso.vn/api/memberships?apiKey=34519997-3d4b-4b31-857f-d6612082c11b&phoneNumber=${phoneNumber}`
-      );
-      const exists = response.data.items.some(item => item.phoneNumber === phoneNumber);
-      console.log("User exists:", exists);
-      return exists;
-    } catch (error) {
-      console.error("Error checking user existence:", error);
-      return false;
-    }
+    const exists = customers.some((item) => item.phoneNumber === phoneNumber);
+    console.log("User exists:", exists);
+    return exists;
   };
 
   const handleSubmit = async () => {
@@ -366,10 +371,11 @@ const CreateOrder = () => {
       };
       const token = localStorage.getItem("vhgp-token");
       try {
-        const userExists = await checkUserExists(customerInfo.phoneNumber);
+        const userExists = checkUserExists(customerInfo.phoneNumber);
         if (!userExists) {
           console.log("User does not exist, creating new user...");
           await createCustomer(customerInfo);
+          setCustomers((prev) => [...prev, customerInfo]);
         }
 
         let order = {
@@ -387,7 +393,7 @@ const CreateOrder = () => {
         };
         console.log("Order data:", order);
 
-        const res = await createOrder(formData.store.value, order);
+        const res = await createOrder(order);
 
         if (res.data) {
           setIsLoadingCircle(false);

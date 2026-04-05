@@ -19,3 +19,12 @@ export const createCustomer = (customerInfo) => {
     }
   );
 };
+
+export const getCustomers = (pageIndex, pageSize) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}customer-management?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    {
+      headers: getAuthHeader(),
+    }
+  );
+};
