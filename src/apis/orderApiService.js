@@ -125,10 +125,10 @@ export const cancelOrder = (OrderId) => {
   );
 };
 
-//https://api.vhgp.net/api/v1/suppliers/deervinhome%40deer.com/billOfLanding
-export const createOrder = (supplierId, order) => {
+//POST /api/v1/orders
+export const createOrder = (order) => {
   return axios.post(
-    `${BASE_URL_CORAL_TEAM_VERSION}suppliers/${supplierId}/billOfLanding`,
+    `${BASE_URL_CORAL_TEAM_VERSION}orders`,
     order,
     {
       headers: getAuthHeader(),
