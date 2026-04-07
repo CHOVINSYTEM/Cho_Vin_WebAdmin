@@ -1,4 +1,5 @@
-export const BASE_URL_CORAL_TEAM_VERSION = "/api/proxy/v1/";
+const API_URL = process.env.REACT_APP_API_URL || "/api/proxy";
+export const BASE_URL_CORAL_TEAM_VERSION = `${API_URL}/v1/`;
 
 export const STORE = "store-management";
 export const PRODUCT = "products";

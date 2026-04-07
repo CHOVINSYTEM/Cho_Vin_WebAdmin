@@ -10,7 +10,11 @@
       "destination": "http://161.118.238.100:8080/api/:path*"
     },
     {
-      "source": "/((?!api/proxy).*)",
+      "source": "/swagger/:path*",
+      "destination": "http://161.118.238.100:8080/swagger/:path*"
+    },
+    {
+      "source": "/((?!api/proxy|swagger).*)",
       "destination": "/index.html"
     }
   ]
