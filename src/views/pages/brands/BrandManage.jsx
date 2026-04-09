@@ -46,7 +46,6 @@ import SimpleHeader from "../../../components/Headers/SimpleHeader";
 import { CategoryModal } from "../../../components/Modals/categoryModal";
 import {
   BrandModal,
-  StorestoreCategoryModal,
 } from "../../../components/Modals/brandModal";
 import { AppContext } from "../../../context/AppProvider";
 import { BrandItem } from "./BrandItem";

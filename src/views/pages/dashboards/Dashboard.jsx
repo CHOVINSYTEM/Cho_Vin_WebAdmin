@@ -23,14 +23,14 @@ import { Chart } from "chart.js";
 import { Card, CardBody, Container, Row, Spinner } from "reactstrap";
 
 // core components
-// import CardsHeader from "../../../components/Headers/CardsHeader.js";
+// import CardsHeader from "../../../components/Headers/CardsHeader";
 import Select from "react-select";
-import CardsHeader from "../../../components/Headers/CardsHeader.js";
+import CardsHeader from "../../../components/Headers/CardsHeader";
 import {
   getOrderReport,
   getOrderReportPrice,
-} from "../../../apis/orderApiService.js";
-import { notify } from "../../../components/Toast/ToastCustom.js";
+} from "../../../apis/orderApiService";
+import { notify } from "../../../components/Toast/ToastCustom";
 import moment from "moment";
 import { AppContext } from "../../../context/AppProvider.jsx";
 

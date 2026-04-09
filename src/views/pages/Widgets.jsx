@@ -47,9 +47,9 @@ import {
   Col,
 } from "reactstrap";
 // core components
-import CardsHeader from "components/Headers/CardsHeader.js";
+import CardsHeader from "components/Headers/CardsHeader";
 
-import { widgetEvents } from "variables/general.js";
+import { widgetEvents } from "variables/general";
 
 let mapData = {
   AU: 760,

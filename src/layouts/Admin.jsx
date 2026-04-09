@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 // react library for routing
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { CardBody, Spinner } from 'reactstrap'
-import AdminNavbar from '../components/Navbars/AdminNavbar.js'
+import AdminNavbar from '../components/Navbars/AdminNavbar'
 // core components
-// import AdminFooter from "../components/Footers/AdminFooter.js";
-import Sidebar from '../components/Sidebar/Sidebar.js'
+// import AdminFooter from "../components/Footers/AdminFooter";
+import Sidebar from '../components/Sidebar/Sidebar'
 import { AppContext } from '../context/AppProvider.jsx'
 import BuildingManage from '../views/pages/areas/BuildingManage.jsx'
 import { NewCategory } from '../views/pages/categories/NewCategory.jsx'
@@ -14,7 +14,7 @@ import { NewMenu } from '../views/pages/menus/NewMenu.jsx'
 import OrderDetail from '../views/pages/orders/OrderDetail.jsx'
 import { NewStore } from '../views/pages/stores/NewStore.jsx'
 // import AdminNavbar from "../components/Navbars/AdminNavbar";
-import routes from './../routes.js'
+import routes from './../routes'
 import Lottie from 'react-lottie'
 import animationData from '../assets/loading.json'
 // import logo from "../../public/images/loading.gif";

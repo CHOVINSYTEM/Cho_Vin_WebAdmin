@@ -15,7 +15,7 @@ import {
 import SimpleHeader from "../../../components/Headers/SimpleHeader";
 import { getBase64Image } from "../../../constants";
 import { AppContext } from "../../../context/AppProvider";
-import { app } from "../../../firebase-config.js";
+import { app } from "../../../firebase-config";
 import {
   getAuth,
   signInWithEmailAndPassword,

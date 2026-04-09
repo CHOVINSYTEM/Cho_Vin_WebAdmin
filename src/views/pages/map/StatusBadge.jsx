@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FiberManualRecord } from "@mui/icons-material";
+import FiberManualRecord from "@mui/icons-material/FiberManualRecord";;
 
 const StatusBadge = ({ status }) => {
   const getStatusColor = () => {
