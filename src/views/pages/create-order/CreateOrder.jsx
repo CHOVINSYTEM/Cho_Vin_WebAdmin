@@ -12,11 +12,11 @@ import SimpleHeader from "../../../components/Headers/SimpleHeader";
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../../context/AppProvider";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { notify } from "../../../components/Toast/ToastCustom";
-import { postMenu } from "../../../apis/menuApiService";
-import Select from "react-select";
-import { createOrder } from "../../../apis/orderApiService";
+import { postMenu, getListMenuByMode } from "../../../apis/menuApiService";
+import { createOrder, getDeliveryTimeByMenuId } from "../../../apis/orderApiService";
 import { createCustomer, getCustomers } from "../../../apis/customerApiService";
+import { notify } from "../../../components/Toast/ToastCustom";
+import Select from "react-select";
 import axios from "axios";
 
 const CreateOrder = () => {
@@ -40,6 +40,10 @@ const CreateOrder = () => {
     noteOfOrder: "",
     noteOfCustomer: "",
     paymentName: "",
+    menuId: "",
+    deliveryTimeId: "",
+    serviceId: { label: "Giao hàng tiêu chuẩn", value: 0 },
+    modeId: "string",
   });
 
   const [formState, setFormState] = useState({
@@ -55,6 +59,7 @@ const CreateOrder = () => {
     noteOfOrder: "",
     noteOfCustomer: "",
     paymentName: "",
+    deliveryTimeId: "",
   });
 
   const [formMessages, setFormMessages] = useState({
@@ -70,14 +75,40 @@ const CreateOrder = () => {
     noteOfOrder: "",
     noteOfCustomer: "",
     paymentName: "",
+    deliveryTimeId: "",
   });
 
   const [isLoadingCircle, setIsLoadingCircle] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const [deliveryTimeList, setDeliveryTimeList] = useState([]);
+  const [isLoadingDeliveryTime, setIsLoadingDeliveryTime] = useState(false);
+  const [menus, setMenus] = useState([]);
+  const [isLoadingMenus, setIsLoadingMenus] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
   }, []);
+
+  useEffect(() => {
+    // Nếu serviceId là 1 (Nhanh) thì lấy menu mode 1
+    // Nếu serviceId là 0 (Tiêu chuẩn) thì lấy menu mode 2
+    const targetMode = formData.serviceId.value === 1 ? 1 : 2;
+    fetchMenus(targetMode);
+  }, [formData.serviceId.value]);
+
+  const fetchMenus = async (mode) => {
+    setIsLoadingMenus(true);
+    try {
+      const response = await getListMenuByMode(mode);
+      if (response.data) {
+        setMenus(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching menus:", error);
+    } finally {
+      setIsLoadingMenus(false);
+    }
+  };
 
   const fetchCustomers = async () => {
     try {
@@ -87,6 +118,36 @@ const CreateOrder = () => {
       }
     } catch (error) {
       console.error("Error fetching customers:", error);
+    }
+  };
+
+  // Fetch delivery time frames khi menuId thay đổi
+  useEffect(() => {
+    if (formData.menuId) {
+      fetchDeliveryTimes(formData.menuId);
+    }
+  }, [formData.menuId]);
+
+  const fetchDeliveryTimes = async (menuId) => {
+    setIsLoadingDeliveryTime(true);
+    try {
+      const response = await getDeliveryTimeByMenuId(menuId);
+      if (response.data && Array.isArray(response.data)) {
+        setDeliveryTimeList(response.data);
+        // Nếu chỉ có 1 khung giờ thì tự động chọn
+        if (response.data.length === 1) {
+          setFormData((prev) => ({ ...prev, deliveryTimeId: response.data[0].id }));
+        } else {
+          setFormData((prev) => ({ ...prev, deliveryTimeId: "" }));
+        }
+      } else {
+        setDeliveryTimeList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching delivery times:", error);
+      setDeliveryTimeList([]);
+    } finally {
+      setIsLoadingDeliveryTime(false);
     }
   };
 
@@ -122,7 +183,7 @@ const CreateOrder = () => {
         customerNote,
       ] = parts;
 
-      const storeOption = optionsStore.find((opt) => opt.value === storeCode);
+      const storeOption = optionsStore.find((opt) => opt.storeCode === storeCode);
       const buildingOption = optionsBuilding.find(
         (opt) => opt.label.toLowerCase() === buildingName.toLowerCase()
       );
@@ -179,7 +240,8 @@ const CreateOrder = () => {
 
   const optionsStore = storeList.map((item) => ({
     label: item.name,
-    value: item.storeCode,
+    value: item.id,
+    storeCode: item.storeCode,
   }));
 
   const optionsBuilding = buildingList.map((item) => ({
@@ -208,6 +270,21 @@ const CreateOrder = () => {
       shorthand: shorthand,
     };
   });
+
+  // Build delivery time options cho Select
+  const optionsDeliveryTime = deliveryTimeList.map((dt) => ({
+    label: `${dt.fromHour} - ${dt.toHour}${
+      dt.fromDate
+        ? ` (${new Date(dt.fromDate).toLocaleDateString("vi-VN")})`
+        : ""
+    }`,
+    value: dt.id,
+  }));
+
+  const optionsMenu = menus.map((m) => ({
+    label: `${m.name} (${m.startHour}h - ${m.endHour}h)`,
+    value: m.id,
+  }));
 
   useEffect(() => {
     const now = new Date();
@@ -326,6 +403,16 @@ const CreateOrder = () => {
       newMessages.phone = "";
     }
 
+    // Validate deliveryTimeId (bắt buộc)
+    if (!formData.deliveryTimeId) {
+      valid = false;
+      newState.deliveryTimeId = "invalid";
+      newMessages.deliveryTimeId = "Khung giờ giao hàng không được để trống";
+    } else {
+      newState.deliveryTimeId = "valid";
+      newMessages.deliveryTimeId = "";
+    }
+
     setFormState(newState);
     setFormMessages(newMessages);
 
@@ -358,6 +445,18 @@ const CreateOrder = () => {
     return exists;
   };
 
+  // Helper: parse lỗi từ backend response
+  const getBackendErrorMessage = (error) => {
+    if (error.response && error.response.data) {
+      const data = error.response.data;
+      // BE trả về { StatusCode: "Fail", message: "..." }
+      if (data.message) return data.message;
+      if (typeof data === "string") return data;
+    }
+    if (error.message) return error.message;
+    return "Đã xảy ra lỗi khi tạo đơn hàng";
+  };
+
   const handleSubmit = async () => {
     if (validateForm()) {
       setIsLoadingCircle(true);
@@ -379,17 +478,31 @@ const CreateOrder = () => {
         }
 
         let order = {
-          timeReceived: formData.timeReceived,
-          timeDelivery: formData.timeDelivery,
-          paymentType: formData.paymentName.value,
-          total: parseFloat(formData.total),
-          shipCost: formData.shipCost,
-          orderNote: formData.noteOfOrder,
-          customerNote: formData.noteOfCustomer,
+          id: "string",
           phoneNumber: formData.phone,
-          fullName: formData.name,
+          total: parseFloat(formData.total),
+          storeId: formData.store.value,
+          menuId: formData.menuId,
           buildingId: formData.building.value,
-          deliveryTimeId: "6",
+          customerNote: formData.noteOfCustomer,
+          orderNote: formData.noteOfOrder,
+          fullName: formData.name,
+          shipCost: parseFloat(formData.shipCost),
+          deliveryTimeId: formData.deliveryTimeId,
+          serviceId: formData.serviceId.value,
+          modeId: formData.serviceId.value === 1 ? "1" : "2",
+          orderDetail: [
+            {
+              productId: "string",
+              quantity: "1",
+              price: parseFloat(formData.total)
+            }
+          ],
+          payments: [
+            {
+              type: formData.paymentName.value,
+            },
+          ],
         };
         console.log("Order data:", order);
 
@@ -403,7 +516,8 @@ const CreateOrder = () => {
       } catch (error) {
         console.error("Error creating order or customer:", error);
         setIsLoadingCircle(false);
-        notify("Đã xảy ra lỗi khi tạo đơn hàng hoặc khách hàng", "Error");
+        const errMsg = getBackendErrorMessage(error);
+        notify(errMsg, "Error");
       }
     }
   };
@@ -423,6 +537,10 @@ const CreateOrder = () => {
       noteOfOrder: "",
       noteOfCustomer: "",
       paymentName: "",
+      menuId: "",
+      deliveryTimeId: "",
+      serviceId: { label: "Giao hàng tiêu chuẩn", value: 0 },
+      modeId: "string",
     });
   };
 
@@ -709,6 +827,106 @@ const CreateOrder = () => {
                             }}
                           >
                             {formMessages.paymentName}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* TITLE System */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        padding: "10px 0px",
+                      }}
+                      className="align-items-center"
+                    >
+                      <CardHeader className="border-0" style={{ padding: "15px" }}>
+                        <h2 className="mb-0">Thông tin hệ thống</h2>
+                      </CardHeader>
+                    </div>
+
+                    {/* SERVICE ID */}
+                    <div className="col-md-4">
+                      <div className="form-group">
+                        <label className="form-control-label">
+                          Dịch vụ <span style={{ color: "red" }}>*</span>
+                        </label>
+                        <Select
+                          options={[
+                            { label: "Giao hàng tiêu chuẩn", value: 0 },
+                            { label: "Giao hàng nhanh", value: 1 },
+                          ]}
+                          value={formData.serviceId}
+                          onChange={(e) => setFormData((prev) => ({ 
+                            ...prev, 
+                            serviceId: e, 
+                            menuId: "", 
+                            deliveryTimeId: "" 
+                          }))}
+                          styles={getSelectStyles(true, false)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* MENU SELECTION */}
+                    <div className="col-md-4">
+                      <div className="form-group">
+                        <label className="form-control-label">
+                          Chọn Thực đơn <span style={{ color: "red" }}>*</span>
+                        </label>
+                        <Select
+                          options={optionsMenu}
+                          placeholder={isLoadingMenus ? "Đang tải..." : "Chọn thực đơn"}
+                          isLoading={isLoadingMenus}
+                          value={
+                            formData.menuId
+                              ? optionsMenu.find((opt) => opt.value === formData.menuId) || null
+                              : null
+                          }
+                          onChange={(e) => {
+                            setFormData((prev) => ({ ...prev, menuId: e ? e.value : "" }));
+                            setFormState((prev) => ({ ...prev, menuId: "" }));
+                          }}
+                          styles={getSelectStyles(true, false)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Delivery Time - Dropdown lấy từ API */}
+                    <div className="col-md-4">
+                      <div className="form-group">
+                        <label className="form-control-label">
+                          Khung giờ giao hàng <span style={{ color: "red" }}>*</span>
+                        </label>
+                        <Select
+                          options={optionsDeliveryTime}
+                          placeholder={isLoadingDeliveryTime ? "Đang tải..." : "Chọn khung giờ"}
+                          isLoading={isLoadingDeliveryTime}
+                          value={
+                            formData.deliveryTimeId
+                              ? optionsDeliveryTime.find((opt) => opt.value === formData.deliveryTimeId) || null
+                              : null
+                          }
+                          onChange={(e) => {
+                            setFormData((prev) => ({ ...prev, deliveryTimeId: e ? e.value : "" }));
+                            setFormState((prev) => ({ ...prev, deliveryTimeId: "" }));
+                          }}
+                          styles={getSelectStyles(
+                            formState.deliveryTimeId === "valid",
+                            formState.deliveryTimeId === "invalid"
+                          )}
+                          isClearable
+                        />
+                        {formState.deliveryTimeId === "invalid" && (
+                          <div style={{ fontSize: "80%", color: "#fb6340", marginTop: "0.25rem" }}>
+                            {formMessages.deliveryTimeId}
+                          </div>
+                        )}
+                        {!formData.deliveryTimeId && deliveryTimeList.length === 0 && !isLoadingDeliveryTime && formData.menuId && (
+                          <div style={{ fontSize: "80%", color: "#fb6340", marginTop: "0.25rem" }}>
+                            Không tìm thấy khung giờ cho menu này
                           </div>
                         )}
                       </div>

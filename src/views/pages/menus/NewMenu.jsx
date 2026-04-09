@@ -40,6 +40,28 @@ export const NewMenu = () => {
   const [area, setArea] = useState('')
   const [areaState, setAreaState] = useState('')
 
+  // Delivery Time Frames
+  const [deliveryTimeFrames, setDeliveryTimeFrames] = useState([])
+
+  const addDeliveryTimeFrame = () => {
+    setDeliveryTimeFrames((prev) => [
+      ...prev,
+      { fromHour: '', toHour: '', fromDate: '', toDate: '' },
+    ])
+  }
+
+  const removeDeliveryTimeFrame = (index) => {
+    setDeliveryTimeFrames((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const updateDeliveryTimeFrame = (index, field, value) => {
+    setDeliveryTimeFrames((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      )
+    )
+  }
+
   const maxNumber = 69
   let history = useHistory()
 
@@ -201,6 +223,19 @@ export const NewMenu = () => {
         return item.value
       })
 
+      // Build listDeliveryTimeFrames nếu có
+      let listDTF = deliveryTimeFrames
+        .filter((dtf) => dtf.fromHour !== '' && dtf.toHour !== '')
+        .map((dtf) => {
+          const frame = {
+            fromHour: parseFloat(dtf.fromHour),
+            toHour: parseFloat(dtf.toHour),
+          }
+          if (dtf.fromDate) frame.fromDate = dtf.fromDate
+          if (dtf.toDate) frame.toDate = dtf.toDate
+          return frame
+        })
+
       let menu = {
         name: menuName,
         image: '',
@@ -211,6 +246,11 @@ export const NewMenu = () => {
         shipCost: parseFloat(shipCost),
         listCategory: categories,
         listAreaId: areas,
+      }
+
+      // Chỉ gửi listDeliveryTimeFrames nếu user đã thêm ít nhất 1 frame
+      if (listDTF.length > 0) {
+        menu.listDeliveryTimeFrames = listDTF
       }
 
       postMenu(menu)
@@ -542,6 +582,93 @@ export const NewMenu = () => {
                             Khu vực không được để trống
                           </div>
                         )}
+                      </div>
+                    </div>
+
+                    {/* DELIVERY TIME FRAMES */}
+                    <div className="col-md-12" style={{ marginTop: '10px' }}>
+                      <div className="form-group">
+                        <label className="form-control-label">
+                          Khung giờ giao hàng
+                        </label>
+                        <p style={{ fontSize: '13px', color: 'grey', margin: '0 0 10px 0' }}>
+                          Nếu không thêm, hệ thống sẽ tạo mặc định theo giờ bắt đầu/kết thúc.
+                        </p>
+                        {deliveryTimeFrames.map((dtf, index) => (
+                          <div
+                            key={index}
+                            className="row"
+                            style={{
+                              background: '#f7f8fa',
+                              borderRadius: '8px',
+                              padding: '10px',
+                              marginBottom: '10px',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <div className="col-md-2">
+                              <label style={{ fontSize: '12px' }}>Từ giờ *</label>
+                              <Input
+                                type="number"
+                                step="0.5"
+                                placeholder="VD: 9"
+                                value={dtf.fromHour}
+                                onChange={(e) =>
+                                  updateDeliveryTimeFrame(index, 'fromHour', e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="col-md-2">
+                              <label style={{ fontSize: '12px' }}>Đến giờ *</label>
+                              <Input
+                                type="number"
+                                step="0.5"
+                                placeholder="VD: 11.5"
+                                value={dtf.toHour}
+                                onChange={(e) =>
+                                  updateDeliveryTimeFrame(index, 'toHour', e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="col-md-3">
+                              <label style={{ fontSize: '12px' }}>Từ ngày</label>
+                              <Input
+                                type="date"
+                                value={dtf.fromDate}
+                                onChange={(e) =>
+                                  updateDeliveryTimeFrame(index, 'fromDate', e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="col-md-3">
+                              <label style={{ fontSize: '12px' }}>Đến ngày</label>
+                              <Input
+                                type="date"
+                                value={dtf.toDate}
+                                onChange={(e) =>
+                                  updateDeliveryTimeFrame(index, 'toDate', e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="col-md-2" style={{ paddingTop: '20px' }}>
+                              <Button
+                                color="danger"
+                                size="sm"
+                                onClick={() => removeDeliveryTimeFrame(index)}
+                              >
+                                <i className="fa fa-trash" /> Xóa
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        <Button
+                          color="info"
+                          size="sm"
+                          onClick={addDeliveryTimeFrame}
+                          style={{ marginTop: '5px' }}
+                        >
+                          <i className="fa fa-plus" /> Thêm khung giờ
+                        </Button>
                       </div>
                     </div>
                   </div>

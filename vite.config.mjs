@@ -32,8 +32,9 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api/proxy': {
-        target: 'http://161.118.238.100:8080/api',
+        target: 'https://localhost:7102/api',
         changeOrigin: true,
+        secure: false, 
         rewrite: (path) => path.replace(/^\/api\/proxy/, ''),
         configure: (proxy, options) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {

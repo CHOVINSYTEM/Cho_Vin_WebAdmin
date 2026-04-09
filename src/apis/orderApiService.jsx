@@ -125,6 +125,16 @@ export const cancelOrder = (OrderId) => {
   );
 };
 
+// GET /api/v1/orders/ByMenuId?menuId=...&pageIndex=1&pageSize=100
+export const getDeliveryTimeByMenuId = (menuId, pageIndex = 1, pageSize = 100) => {
+  return axios.get(
+    `${BASE_URL_CORAL_TEAM_VERSION}orders/ByMenuId?menuId=${menuId}&pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    {
+      headers: getAuthHeader(),
+    }
+  );
+};
+
 //POST /api/v1/orders
 export const createOrder = (order) => {
   return axios.post(

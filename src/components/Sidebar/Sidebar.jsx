@@ -136,7 +136,7 @@ function Sidebar({ toggleSidenav, sidenavOpen, routes, logo, rtlActive }) {
         )
       }
       return (
-        <>
+        <React.Fragment key={key}>
           {/* {prop.type === 1 && <span className="">Giao hàng</span>} */}
           {prop.type === 1 && (
             <span
@@ -178,7 +178,7 @@ function Sidebar({ toggleSidenav, sidenavOpen, routes, logo, rtlActive }) {
               Hệ thống
             </span>
           )}
-          <NavItem className={activeRoute(prop.layout + prop.path)} key={key}>
+          <NavItem className={activeRoute(prop.layout + prop.path)}>
             <NavLink
               to={prop.layout + prop.path}
               activeClassName="sidebar-name"
@@ -201,7 +201,7 @@ function Sidebar({ toggleSidenav, sidenavOpen, routes, logo, rtlActive }) {
               )}
             </NavLink>
           </NavItem>
-        </>
+        </React.Fragment>
       )
     })
   }

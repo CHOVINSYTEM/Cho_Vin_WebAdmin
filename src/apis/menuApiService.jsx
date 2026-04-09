@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-  MENU,
-  PRODUCT,
-  BASE_URL_CORAL_TEAM_VERSION,
-} from "./constants";
+import { MENU, PRODUCT, BASE_URL_CORAL_TEAM_VERSION } from "./constants";
 
 const token = localStorage.getItem("vhgp-token");
 
