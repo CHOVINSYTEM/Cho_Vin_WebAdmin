@@ -6,6 +6,7 @@ import {
   CardHeader,
   Col,
   Container,
+  Input,
   Modal,
   Row,
   Spinner,
@@ -21,12 +22,50 @@ export const EditBuildingModal = ({ handleReload }) => {
   const [longitude, setLongitude] = useState('')
   const [latitude, setLatitude] = useState('')
   const [isLoadingCircle, setIsLoadingCircle] = useState(false)
+  const [googleMapsLink, setGoogleMapsLink] = useState('')
+  const [googleMapsLinkState, setGoogleMapsLinkState] = useState('')
 
   useEffect(() => {
     setBuildingName(buildingModal.name || '')
     setLongitude(buildingModal.longitude || '')
     setLatitude(buildingModal.latitude || '')
   }, [buildingModal])
+
+  const parseGoogleMapsLink = (link) => {
+    // ưu tiên lấy tọa độ địa điểm chính xác từ !3d<lat>!4d<lng>
+    const placeRegex = /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/
+    const placeMatch = link.match(placeRegex)
+
+    // Fallback: lấy từ /@lat,lng (tọa độ viewport)
+    const viewRegex = \/@(-?\d+\.\d+),(-?\d+\.\d+)/
+    const viewMatch = link.match(viewRegex)
+
+    const rawLat = placeMatch ? placeMatch[1] : viewMatch ? viewMatch[1] : null
+    const rawLng = placeMatch ? placeMatch[2] : viewMatch ? viewMatch[2] : null
+
+    if (rawLat !== null && rawLng !== null) {
+      const lat = parseFloat(rawLat)
+      const lng = parseFloat(rawLng)
+      if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+        setLatitude(rawLat)
+        setLongitude(rawLng)
+        setGoogleMapsLinkState('valid')
+      } else {
+        setGoogleMapsLinkState('invalid')
+      }
+    } else {
+      setGoogleMapsLinkState('invalid')
+    }
+  }
+
+  const handleGoogleMapsLinkChange = (value) => {
+    setGoogleMapsLink(value)
+    if (value.trim()) {
+      parseGoogleMapsLink(value.trim())
+    } else {
+      setGoogleMapsLinkState('')
+    }
+  }
 
   const handleUpdate = () => {
     setIsLoadingCircle(true)
@@ -121,6 +160,50 @@ export const EditBuildingModal = ({ handleReload }) => {
                                         setBuildingName(e.target.value)
                                       }
                                     />
+                                  </div>
+                                </div>
+                                <div className="col-md-12">
+                                  <div className="form-group">
+                                    <label className="form-control-label d-flex align-items-center" style={{ gap: 6 }}>
+                                      <i className="fa-solid fa-location-dot" style={{ color: '#e74c3c' }}></i>
+                                      Link Google Maps
+                                      <span style={{ fontSize: 11, fontWeight: 400, color: '#888', marginLeft: 4 }}>
+                                        (Dán link đầy đủ sau khi mở từ trình duyệt)
+                                      </span>
+                                    </label>
+                                    <div style={{ position: 'relative' }}>
+                                      <Input
+                                        valid={googleMapsLinkState === 'valid'}
+                                        invalid={googleMapsLinkState === 'invalid'}
+                                        className="form-control"
+                                        type="text"
+                                        placeholder="https://www.google.com/maps/place/.../@lat,lng,..."
+                                        value={googleMapsLink}
+                                        onChange={(e) => handleGoogleMapsLinkChange(e.target.value)}
+                                        style={{ paddingRight: 48 }}
+                                      />
+                                      {googleMapsLink && (
+                                        <button
+                                          type="button"
+                                          onClick={() => { setGoogleMapsLink(''); setGoogleMapsLinkState('') }}
+                                          style={{
+                                            position: 'absolute', right: 10, top: '50%',
+                                            transform: 'translateY(-50%)', background: 'none',
+                                            border: 'none', cursor: 'pointer', color: '#aaa', fontSize: 16,
+                                          }}
+                                        >
+                                          ✕
+                                        </button>
+                                      )}
+                                    </div>
+                                    <div className="invalid-feedback">
+                                      Không tìm thấy tọa độ trong link. Hãy dán link Google Maps đầy đủ (dạng /place/.../@lat,lng,...)
+                                    </div>
+                                    {googleMapsLinkState === 'valid' && (
+                                      <small style={{ color: '#2dce89', marginTop: 4, display: 'block' }}>
+                                        ✓ Đã tự động điền kinh độ & vĩ độ!
+                                      </small>
+                                    )}
                                   </div>
                                 </div>
                                 <div className="col-md-6">
