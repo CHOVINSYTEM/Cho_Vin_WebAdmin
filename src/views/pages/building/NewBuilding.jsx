@@ -169,7 +169,7 @@ export const NewBuilding = ({ handleReload }) => {
     const placeMatch = link.match(placeRegex)
 
     // Fallback: lấy từ /@lat,lng (tọa độ viewport)
-    const viewRegex = \/@(-?\d+\.\d+),(-?\d+\.\d+)/
+    const viewRegex = /@(-?\d+\.\d+),(-?\d+\.\d+)/
     const viewMatch = link.match(viewRegex)
 
     const rawLat = placeMatch ? placeMatch[1] : viewMatch ? viewMatch[1] : null
