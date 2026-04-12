@@ -4,7 +4,6 @@
       "CI": "false"
     }
   },
-  "nodeVersion": "20.x",
   "rewrites": [
     {
       "source": "/api/proxy/:path*",
