@@ -50,6 +50,23 @@ import {
 import CardsHeader from "components/Headers/CardsHeader";
 
 import { widgetEvents } from "variables/general";
+import img1000x900 from "assets/img/theme/img-1-1000x900.jpg";
+import team1 from "assets/img/theme/team-1.jpg";
+import team2 from "assets/img/theme/team-2.jpg";
+import team3 from "assets/img/theme/team-3.jpg";
+import team4 from "assets/img/theme/team-4.jpg";
+import team5 from "assets/img/theme/team-5.jpg";
+import mastercardImg from "assets/img/icons/cards/mastercard.png";
+import bootstrapImg from "assets/img/theme/bootstrap.jpg";
+import angularImg from "assets/img/theme/angular.jpg";
+import sketchImg from "assets/img/theme/sketch.jpg";
+import reactImg from "assets/img/theme/react.jpg";
+import vueImg from "assets/img/theme/vue.jpg";
+import paypalImg from "assets/img/icons/cards/paypal.png";
+import usFlag from "assets/img/icons/flags/US.png";
+import deFlag from "assets/img/icons/flags/DE.png";
+import gbFlag from "assets/img/icons/flags/GB.png";
+import visaImg from "assets/img/icons/cards/visa.png";
 
 let mapData = {
   AU: 760,
@@ -92,7 +109,7 @@ function Widgets() {
             <Card>
               <CardImg
                 alt="..."
-                src={require("assets/img/theme/img-1-1000x900.jpg").default}
+                src={img1000x900}
                 top
               />
               <CardBody>
@@ -146,7 +163,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/team-1.jpg").default}
+                            src={team1}
                           />
                         </a>
                       </Col>
@@ -176,7 +193,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/team-2.jpg").default}
+                            src={team2}
                           />
                         </a>
                       </Col>
@@ -206,7 +223,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/team-3.jpg").default}
+                            src={team3}
                           />
                         </a>
                       </Col>
@@ -236,7 +253,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/team-4.jpg").default}
+                            src={team4}
                           />
                         </a>
                       </Col>
@@ -266,7 +283,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/team-5.jpg").default}
+                            src={team5}
                           />
                         </a>
                       </Col>
@@ -307,7 +324,7 @@ function Widgets() {
                           <img
                             alt="..."
                             className="avatar avatar-xs mr-2"
-                            src={require("assets/img/theme/team-1.jpg").default}
+                            src={team1}
                           />
                           <h5 className="mb-1">Tim</h5>
                         </div>
@@ -332,7 +349,7 @@ function Widgets() {
                           <img
                             alt="..."
                             className="avatar avatar-xs mr-2"
-                            src={require("assets/img/theme/team-2.jpg").default}
+                            src={team2}
                           />
                           <h5 className="mb-1">Mike</h5>
                         </div>
@@ -358,7 +375,7 @@ function Widgets() {
                     <img
                       alt="..."
                       src={
-                        require("assets/img/icons/cards/mastercard.png").default
+                        mastercardImg
                       }
                     />
                   </div>
@@ -585,7 +602,7 @@ function Widgets() {
                           <img
                             alt="..."
                             src={
-                              require("assets/img/theme/bootstrap.jpg").default
+                              bootstrapImg
                             }
                           />
                         </a>
@@ -612,7 +629,7 @@ function Widgets() {
                           <img
                             alt="..."
                             src={
-                              require("assets/img/theme/angular.jpg").default
+                              angularImg
                             }
                           />
                         </a>
@@ -638,7 +655,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/sketch.jpg").default}
+                            src={sketchImg}
                           />
                         </a>
                       </Col>
@@ -663,7 +680,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/react.jpg").default}
+                            src={reactImg}
                           />
                         </a>
                       </Col>
@@ -688,7 +705,7 @@ function Widgets() {
                         >
                           <img
                             alt="..."
-                            src={require("assets/img/theme/vue.jpg").default}
+                            src={vueImg}
                           />
                         </a>
                       </Col>
@@ -712,7 +729,7 @@ function Widgets() {
                   <div className="col">
                     <img
                       alt="..."
-                      src={require("assets/img/icons/cards/paypal.png").default}
+                      src={paypalImg}
                     />
                   </div>
                   <Col className="col-auto">
@@ -850,7 +867,7 @@ function Widgets() {
                       <Col className="col-auto">
                         <img
                           alt="..."
-                          src={require("assets/img/icons/flags/US.png").default}
+                          src={usFlag}
                         />
                       </Col>
                       <div className="col">
@@ -872,7 +889,7 @@ function Widgets() {
                       <Col className="col-auto">
                         <img
                           alt="..."
-                          src={require("assets/img/icons/flags/DE.png").default}
+                          src={deFlag}
                         />
                       </Col>
                       <div className="col">
@@ -894,7 +911,7 @@ function Widgets() {
                       <Col className="col-auto">
                         <img
                           alt="..."
-                          src={require("assets/img/icons/flags/GB.png").default}
+                          src={gbFlag}
                         />
                       </Col>
                       <div className="col">
@@ -920,7 +937,7 @@ function Widgets() {
                   <div className="col">
                     <img
                       alt="..."
-                      src={require("assets/img/icons/cards/visa.png").default}
+                      src={visaImg}
                     />
                   </div>
                   <Col className="col-auto">

@@ -1,16 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import cesium from 'vite-plugin-cesium';
-import requireTransform from 'vite-plugin-require-transform';
+
 import path from 'path';
 
 export default defineConfig({
   plugins: [
     react(),
     cesium(),
-    requireTransform({
-      fileRegex: /\.(js|jsx)$/
-    }),
+
   ],
   optimizeDeps: {
     include: [
